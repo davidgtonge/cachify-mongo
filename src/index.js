@@ -30,7 +30,12 @@ const cachify = (collection) => {
     const keyFn = options.keyFn || R.identity
     const expiry = (options.expires || DEFAULT_EXPIRY) * 1000
     return function cachifedFn(...args) {
-      const key = keyFn(...args)
+      let key
+      try {
+        key = keyFn(...args)
+      } catch (e) {
+        return Promise.reject(e)
+      }
       return getCached(collection, key)
       .then(whenNoResult(() => getAndCache(collection, asyncFn, args, key, expiry)))
     }
