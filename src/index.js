@@ -12,7 +12,7 @@ const ensureIndexes = (collection) => {
 
 const getCached = (collection, key) => {
   return collection.findOne({key})
-  .then(R.unless(R.identity, R.always(NO_RESULT)))
+  .then(R.ifElse(R.identity, R.prop("result"), R.always(NO_RESULT)))
 }
 
 const getAndCache = (collection, fn, args, key, expiry) => {
